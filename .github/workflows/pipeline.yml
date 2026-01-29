@@ -1,31 +1,21 @@
-name: CI/CD Pipeline
+name: build-test-deploy
 
 on:
   push:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
-  build-test-deploy:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Build
-      run: |
-        echo "Building website..."
-        mkdir build
-        cp index.html build/
-
-    - name: Test
-      run: |
-        echo "Running tests..."
-        test -f build/index.html
-
-    - name: Deploy
-      uses: peaceiris/actions-gh-pages@v4
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./build
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist   # change if needed
